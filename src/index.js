@@ -1,9 +1,6 @@
 import dotenv from "dotenv";
-import express from "express";
+import { app } from "./app.js";
 import connectDB from "./db/index.js";
-
-const app = express();
-const port = process.env.PORT || 8000;
 
 // dotenv file configuration
 dotenv.config({
@@ -11,13 +8,15 @@ dotenv.config({
 });
 
 
+const port = process.env.PORT || 8000;
+
 // calling connectDB function to connect to database
-connectDB();
-
-app.get("/", (req, res) => {
-    res.send("Welcome to backend World");
-});
-
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+connectDB()
+    .then(() => {
+        app.listen(port, () => {
+            console.log(`Server is running on port ${port}`);
+        });
+    })
+    .catch((error) => {
+        console.log(error);
+    });
